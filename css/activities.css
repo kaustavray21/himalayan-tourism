@@ -1,0 +1,113 @@
+/* ============================================================
+   activities.css — Activities gallery + traveller ratings
+   ============================================================ */
+
+/* ---------- Activities grid (rounded cards) ---------- */
+.act-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-5);
+  padding-block: var(--s-7);
+}
+.act-card {
+  position: relative; display: block; border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: var(--shadow-sm); background: #fff;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.act-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+.act-card__media { aspect-ratio: 1 / 1; overflow: hidden; }
+.act-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
+.act-card:hover .act-card__media img { transform: scale(1.07); }
+.act-card__body {
+  position: absolute; inset: auto 0 0 0; z-index: 1; color: #fff;
+  padding: var(--s-5) var(--s-4) var(--s-4);
+  background: linear-gradient(180deg, transparent, rgba(10,15,20,.85));
+  display: flex; flex-direction: column; gap: 2px;
+}
+.act-card__place { font-size: var(--fs-xs); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: rgba(255,255,255,.82); }
+.act-card__name { font-size: 1.02rem; font-weight: 700; line-height: 1.25; }
+
+/* ---------- Traveller stories (auto-shuffling, photo background) ---------- */
+.reviews { position: relative; max-width: 920px; margin-inline: auto; }
+.reviews__viewport {
+  position: relative; min-height: 360px; border-radius: var(--radius-lg);
+  overflow: hidden; box-shadow: var(--shadow-md);
+}
+.review {
+  position: absolute; inset: 0; margin: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-3);
+  padding: clamp(28px, 5vw, 64px); text-align: center; color: #fff;
+  opacity: 0; transition: opacity .7s var(--ease); pointer-events: none;
+}
+.review.is-active { opacity: 1; pointer-events: auto; }
+/* Background photo on the story card */
+.review__bg { position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.02); }
+.review__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,15,20,.5), rgba(10,15,20,.82)); }
+.review__content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: var(--s-3); }
+.review__stars { color: var(--color-gold); font-size: 1.3rem; letter-spacing: 3px; }
+.review blockquote {
+  font-size: clamp(1.15rem, 2.2vw, 1.7rem); font-weight: 600; line-height: 1.4; color: #fff;
+  max-width: 56ch; text-shadow: 0 1px 12px rgba(0,0,0,.35);
+}
+.review figcaption strong { color: #fff; }
+.review__by { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: var(--s-2); }
+.review__avatar {
+  width: 52px; height: 52px; border-radius: 50%; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1.05rem; color: #fff;
+  background: linear-gradient(135deg, var(--color-accent), #6fd0e0);
+  border: 2px solid rgba(255,255,255,.7); box-shadow: var(--shadow-sm); overflow: hidden;
+}
+.review__avatar img { width: 100%; height: 100%; object-fit: cover; }
+.review__who { display: flex; flex-direction: column; text-align: left; }
+.review__who small { color: rgba(255,255,255,.8); }
+
+/* Thin, borderless prev / next arrows (no circle) */
+.reviews__arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+  width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center;
+  color: #fff; background: none; border: none; opacity: .8;
+  filter: drop-shadow(0 1px 5px rgba(0, 0, 0, .45));
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.reviews__arrow:hover { opacity: 1; }
+.reviews__arrow--prev:hover { transform: translateY(-50%) translateX(-2px); }
+.reviews__arrow--next:hover { transform: translateY(-50%) translateX(2px); }
+.reviews__arrow svg { width: 30px; height: 30px; stroke-width: 1.4; }
+.reviews__arrow--prev { left: clamp(6px, 2vw, 22px); }
+.reviews__arrow--next { right: clamp(6px, 2vw, 22px); }
+.reviews__dots { display: flex; gap: 8px; justify-content: center; margin-top: var(--s-5); }
+.reviews__dots button {
+  width: 9px; height: 9px; border-radius: 50%; background: var(--color-line);
+  transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.reviews__dots button:hover { background: var(--color-muted); }
+.reviews__dots button.is-active { background: var(--color-accent); transform: scale(1.3); }
+
+/* ---------- Blog / FAQ section ---------- */
+.blog-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-5); }
+.blog-card {
+  display: flex; flex-direction: column; background: #fff;
+  border: 1px solid var(--color-line); border-radius: var(--radius-lg); overflow: hidden;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.blog-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+.blog-card__media { aspect-ratio: 16 / 10; overflow: hidden; }
+.blog-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
+.blog-card:hover .blog-card__media img { transform: scale(1.06); }
+.blog-card__body { padding: var(--s-4); display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.blog-card__tag {
+  align-self: flex-start; font-size: var(--fs-xs); font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--color-accent); background: var(--color-bg-alt); padding: 4px 10px; border-radius: var(--radius-pill);
+}
+.blog-card__body h3 { font-size: 1.08rem; line-height: 1.3; }
+.blog-card__body p { font-size: var(--fs-sm); flex: 1; }
+.blog-card .link-arrow { font-size: var(--fs-sm); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1000px) { .blog-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px) { .act-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 560px) { .blog-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  .act-grid { grid-template-columns: repeat(2, 1fr); gap: var(--s-4); }
+  .reviews__viewport { min-height: 280px; }
+}
+@media (max-width: 380px) { .act-grid { grid-template-columns: 1fr; } }
