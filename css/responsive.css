@@ -27,16 +27,19 @@
 
 /* ---------- Large tablets / small laptops ---------- */
 @media (max-width: 1100px) {
+  /* Collapse the primary nav into the hamburger here: above 1100px the full
+     brand + nav + links + CTA + icons row fits; below it, it would overflow
+     and push a gap onto the right edge. */
+  .primary-nav { display: none; }
+  .hamburger { display: inline-flex; }
   .footer-cols { grid-template-columns: 1fr 1fr 1fr; }
   .footer-brand { grid-column: 1 / -1; margin-bottom: var(--s-4); }
   .quicklinks { grid-template-columns: repeat(3, 1fr); }
   .pkg-detail__layout { gap: var(--s-6); }
 }
 
-/* ---------- Tablets — collapse primary nav into hamburger ---------- */
+/* ---------- Tablets ---------- */
 @media (max-width: 900px) {
-  .primary-nav { display: none; }
-  .hamburger { display: inline-flex; }
   .grid--4 { grid-template-columns: repeat(2, 1fr); }
   .grid--3 { grid-template-columns: repeat(2, 1fr); }
   .banner, .banner--reverse { grid-template-columns: 1fr; }
@@ -51,6 +54,12 @@
 /* ---------- Small tablets ---------- */
 @media (max-width: 760px) {
   .header-link { display: none; }              /* live in the mobile drawer */
+  /* On small ratios the floating header has little content (brand + icons),
+     so use a COMPACT, CENTERED pill instead of the wide inset bar. */
+  .site-header.is-floating .header-inner {
+    width: max-content; max-width: calc(100% - 24px); margin-inline: auto;
+  }
+  .site-header.is-floating .header-utils { margin-left: 0; }  /* group, don't spread */
   .hero--page { min-height: clamp(360px, 52vh, 520px); }
   .pkg-head h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); }
 }
@@ -74,7 +83,6 @@
   .footer-legal nav { gap: var(--s-3); }
   .mega { display: none; }                                   /* desktop hover only */
   .brand { font-size: 1.3rem; }
-  .site-header.is-floating { margin-inline: 10px; }          /* keep the pill from squeezing content out */
   .reviews__arrow { display: none; }                         /* use dots / swipe */
   .review blockquote { font-size: clamp(1.05rem, 4.5vw, 1.35rem); }
   .pkg-detail__facts { gap: var(--s-3); }
@@ -85,7 +93,6 @@
 @media (max-width: 480px) {
   .header-cta { display: none; }                             /* Packages lives in the drawer */
   .header-inner { padding-inline: 12px; gap: var(--s-4); }   /* tighter so the menu icon stays inside */
-  .site-header.is-floating { margin-inline: 6px; border-radius: 22px; }
   .brand { font-size: 1.1rem; gap: 8px; }
   .brand svg { width: 24px; height: 24px; }
   .header-utils { gap: 0; }

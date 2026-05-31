@@ -1,6 +1,12 @@
 /* ============================================================
    base.css — typography, body, links, helpers
    ============================================================ */
+html, body {
+  /* clip (not hidden) kills any stray horizontal overflow / right-side gap
+     without turning the element into a scroll container, so the sticky
+     header keeps anchoring to the viewport. */
+  overflow-x: clip;
+}
 body {
   font-family: var(--font-sans);
   font-size: var(--fs-body);

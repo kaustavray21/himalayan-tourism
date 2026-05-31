@@ -12,9 +12,10 @@
               background var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
               border-radius var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-/* Floating "glass" header — a COMPACT, CENTERED pill once the page is scrolled.
-   The pill shrinks to its content (no empty stretch) and centers itself,
-   which also keeps the menu/wishlist icons inside the bar at every width. */
+/* Floating "glass" header — a wide, inset rounded glass bar once scrolled.
+   Content stays spread (brand left / utils right) so NOTHING reflows
+   horizontally; only the bar's width, height and glass chrome animate.
+   max-width is capped below 100% so the bar can never cause overflow. */
 .site-header.is-floating {
   top: 12px;
   background: transparent;
@@ -22,16 +23,15 @@
   box-shadow: none;
 }
 .site-header.is-floating .header-inner {
-  width: max-content; max-width: calc(100% - 16px); margin-inline: auto;
-  height: auto; padding: 8px 18px; gap: var(--s-4);
+  height: calc(var(--header-h) - 16px);
+  max-width: min(1120px, calc(100% - 24px));
   border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, .66);
+  background: rgba(255, 255, 255, .72);
   -webkit-backdrop-filter: blur(16px) saturate(170%);
   backdrop-filter: blur(16px) saturate(170%);
-  border: 1px solid rgba(255, 255, 255, .6);
+  border-color: rgba(255, 255, 255, .6);
   box-shadow: var(--shadow-lg);
 }
-.site-header.is-floating .header-utils { margin-left: 0; }   /* group content, don't spread it */
 /* In the floating glass bar, drop the solid hover pill — only recolor the text */
 .site-header.is-floating .nav-item:hover .nav-link,
 .site-header.is-floating .nav-item.is-open .nav-link,
@@ -43,6 +43,13 @@
 .header-inner {
   height: var(--header-h);
   display: flex; align-items: center; gap: var(--s-5);
+  /* transparent border in the rest state so the floating border-color
+     transition never shifts layout */
+  border: 1px solid transparent;
+  transition: height var(--dur) var(--ease), max-width var(--dur) var(--ease),
+              background var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+              border-radius var(--dur) var(--ease), border-color var(--dur) var(--ease),
+              -webkit-backdrop-filter var(--dur) var(--ease), backdrop-filter var(--dur) var(--ease);
 }
 .brand {
   display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
