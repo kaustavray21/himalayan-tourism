@@ -1,0 +1,60 @@
+_toon:
+  v: "1.0"
+  schema: kb_full
+  created: "2026-06-01T00:00:00Z"
+  updated: "2026-06-01T00:00:00Z"
+  project: himalayan-tourism
+  record_count: 66
+summary:
+  total_source_files: 17
+  total_deps: 48
+  total_updates: 1
+  file_breakdown:
+    js: 5
+    css: 10
+    html: 1
+    gs: 1
+  app_type: "static SPA — vanilla JS, no framework"
+  entry: index.html
+  views[6]: home,packages,package,activities,albums,contact
+data_flow:
+  order[5]: js/config.js     → SHEET_ENDPOINT (form POST target),"js/data.js       → PLACES, PACKAGES, ACTIVITIES, REVIEWS, ... (all content)","js/components.js → window.UI (render helpers, wishlist, forms, carousels)",js/router.js     → __renderRoute (hash-based SPA router),js/main.js       → window.ROUTES (view renderers) + boot()
+  note: Scripts load in this exact order via <script defer> in index.html. data.js is the single source of truth for all content. components.js depends on data.js (NAV) + config.js (SHEET_ENDPOINT). main.js depends on data.js + components.js. router.js depends on components.js (UI.hydrate) + main.js (ROUTES).
+key_files:
+  "js/data.js":
+    exports: 13
+    lines: 226
+    role: ALL content — the brain of the app
+    key_exports[9]: PLACES (2 destinations),"PACKAGES (6 trips: 2 places × 3 durations)",ACTIVITIES (12 items),REVIEWS (6 testimonials),FAQS (4 entries),"ALBUMS (2 albums, 16 photos total)",NAV (mega menu structure),HOME (hero + featured),CONTACT (owner info)
+  "js/components.js":
+    exports: 1
+    lines: 576
+    role: "UI engine — rendering, interactivity, forms, overlays"
+    subsystems[9]: UI.card / UI.grid / UI.carousel / UI.hero / UI.banner (render helpers),Wish (localStorage wishlist),Header nav builder (mega menu + mobile),Form submitter (Google Apps Script POST),Search overlay,Hero slideshow auto-rotate,Review carousel auto-shuffle,Filter sheet (glass FAB),Lead popup (delayed capture modal)
+  "js/main.js":
+    exports: 1
+    lines: 532
+    role: 6 view renderers + app boot sequence
+    views[6]: ROUTES.home — hero + featured carousel + dest stack + reviews + pillars + contact band,ROUTES.packages — filter chips + package list + glass filter sheet,ROUTES.package — hero + itinerary + booking sidebar + incl/food + 'more trips',ROUTES.contact — owner card + contact form with country code + submit handler,ROUTES.activities — hero + lowkey/pick sections + filter + reviews + blog FAQ,ROUTES.albums — hero + masonry photo grids per album
+  "js/router.js":
+    exports: 2
+    lines: 83
+    role: Thin SPA router — hash change → swap view → hydrate UI
+  "css/":
+    files: 10
+    lines_est: 1450
+    cascade: reset → variables → base → layout → components → page-specific → responsive
+  "apps-script/Code.gs":
+    exports: 2
+    lines: 80
+    role: "Serverless backend — receives form POSTs, writes to Google Sheet"
+deps_heatmap:
+  most_called_files:
+    "js/data.js": called by 22 deps (main.js reads everything)
+    "js/components.js": "called by 10 deps (main.js calls init functions on boot, router calls UI.hydrate)"
+    "js/config.js": called by 1 dep (SHEET_ENDPOINT read in UI.submitToSheet)
+  most_dependent_files:
+    "js/main.js": 27 outgoing deps (reads 9 data exports + calls 7 UI funcs + 1 router func)
+    index.html: 15 outgoing deps (loads all css + js files)
+changelog[1]{id,ts,type,summary,triggered_by}:
+  upd_001,"2026-06-01T00:00:00Z",docs,initial KB creation — pickle init scan,pickle init

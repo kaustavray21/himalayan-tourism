@@ -1,0 +1,230 @@
+_toon:
+  v: "1.0"
+  schema: merged
+  created: "2026-05-31T19:26:23.672Z"
+  updated: "2026-05-31T19:26:23.673Z"
+  project: unknown
+  record_count: 4
+  sources[4]: kb_full,kb_deps,kb_map,kb_updates
+merged_from:
+  kb_full:
+    source: kb.toon.json
+    record_count: 66
+    updated: "2026-06-01T00:00:00Z"
+  kb_deps:
+    source: kb_deps.toon.json
+    record_count: 17
+    updated: "2026-06-01T00:00:00Z"
+  kb_map:
+    source: kb_map.toon.json
+    record_count: 17
+    updated: "2026-06-01T00:00:00Z"
+  kb_updates:
+    source: kb_updates.toon.json
+    record_count: 2
+    updated: "2026-06-01T00:00:00Z"
+summary:
+  total_source_files: 17
+  total_deps: 48
+  total_updates: 1
+  file_breakdown:
+    js: 5
+    css: 10
+    html: 1
+    gs: 1
+  app_type: "static SPA — vanilla JS, no framework"
+  entry: index.html
+  views[6]: home,packages,package,activities,albums,contact
+deps[51]{caller_file,caller_func,callee_file,callee_func,callee_line,dep_type,note}:
+  js/components.js,UI.submitToSheet,js/config.js,SHEET_ENDPOINT,10,reads,read endpoint URL for form POST
+  js/components.js,UI.buildHeaderNav,js/data.js,NAV,176,reads,build nav menu from NAV data
+  js/components.js,window.imgErr,js/components.js,window.imgErr,19,reads,self-contained error handler
+  js/main.js,ROUTES.home,js/data.js,HOME,186,reads,render home page from HOME data
+  js/main.js,ROUTES.home,js/data.js,PACKAGES,96,reads,get featured packages for home carousel
+  js/main.js,ROUTES.home,js/data.js,PLACES,37,reads,render destination links
+  js/main.js,ROUTES.home,js/data.js,ACTIVITIES,121,reads,show activity photos in dest stack
+  js/main.js,ROUTES.packages,js/data.js,PLACES,37,reads,build destination filter chips
+  js/main.js,ROUTES.packages,js/data.js,PACKAGES,96,reads,render full package list
+  js/main.js,ROUTES.package,js/data.js,PACKAGES,96,reads,find package by slug
+  js/main.js,ROUTES.package,js/data.js,pkgsByPlace,118,calls,get same-place packages for 'you might also like'
+  js/main.js,ROUTES.contact,js/data.js,CONTACT,199,reads,render contact page from CONTACT data
+  js/main.js,ROUTES.contact,js/data.js,COUNTRY_CODES,214,reads,build country code dropdown
+  js/main.js,ROUTES.contact,js/data.js,PACKAGES,96,reads,package dropdown in contact form
+  js/main.js,ROUTES.activities,js/data.js,ACTIVITIES,121,reads,render activity cards
+  js/main.js,ROUTES.activities,js/data.js,PLACES,37,reads,build activity filter chips
+  js/main.js,ROUTES.activities,js/data.js,REVIEWS,126,reads,render traveller reviews section
+  js/main.js,ROUTES.activities,js/data.js,FAQS,136,reads,render FAQ/blog section
+  js/main.js,ROUTES.activities,js/data.js,HM,26,reads,hero image for activities page
+  js/main.js,ROUTES.albums,js/data.js,ALBUMS,144,reads,render photo albums
+  js/main.js,ROUTES.albums,js/data.js,HM,26,reads,hero images for albums page
+  js/main.js,buildSearchIndex,js/data.js,PLACES,37,reads,add places to search index
+  js/main.js,buildSearchIndex,js/data.js,PACKAGES,96,reads,add packages to search index
+  js/main.js,reviewsBlock,js/data.js,REVIEWS,126,reads,shuffle and render reviews
+  js/main.js,pillars,js/data.js,HM,26,reads,pillars section background
+  js/main.js,contactBand,js/data.js,CONTACT,199,reads,contact band section
+  js/main.js,boot,js/components.js,UI.buildHeaderNav,294,calls,build nav on boot
+  js/main.js,boot,js/components.js,UI.initHeaderUI,355,calls,init header on boot
+  js/main.js,boot,js/components.js,UI.initScrollGlass,459,calls,init scroll glass on boot
+  js/main.js,boot,js/components.js,UI.initFilterGlobals,483,calls,init filter globals on boot
+  js/main.js,boot,js/components.js,UI.initLeadPopup,535,calls,init lead popup on boot
+  js/main.js,boot,js/components.js,UI.syncFavs,256,calls,sync wishlist state on boot
+  js/main.js,boot,js/router.js,__renderRoute,64,calls,trigger initial route render on boot
+  js/router.js,render,js/components.js,UI.hydrate,519,calls,hydrate view after render
+  js/router.js,render,js/components.js,__closeOverlays,370,calls,close overlays on route change
+  js/router.js,render,js/main.js,ROUTES,null,reads,read registered route handlers
+  index.html,document,js/main.js,ROUTES,null,imports,script tag loads main.js
+  index.html,document,js/router.js,__startRouter,null,imports,script tag loads router.js
+  index.html,document,js/components.js,UI,null,imports,script tag loads components.js
+  index.html,document,js/data.js,PACKAGES,null,imports,script tag loads data.js
+  index.html,document,js/config.js,SHEET_ENDPOINT,null,imports,script tag loads config.js
+  index.html,document,css/reset.css,null,null,imports,link tag loads reset.css
+  index.html,document,css/variables.css,null,null,imports,link tag loads variables.css
+  index.html,document,css/base.css,null,null,imports,link tag loads base.css
+  index.html,document,css/layout.css,null,null,imports,link tag loads layout.css
+  index.html,document,css/components.css,null,null,imports,link tag loads components.css
+  index.html,document,css/packages.css,null,null,imports,link tag loads packages.css
+  index.html,document,css/activities.css,null,null,imports,link tag loads activities.css
+  index.html,document,css/albums.css,null,null,imports,link tag loads albums.css
+  index.html,document,css/home.css,null,null,imports,link tag loads home.css
+  index.html,document,css/responsive.css,null,null,imports,link tag loads responsive.css
+files:
+  index.html:
+    purpose: "Entry point — SPA shell with header, footer, overlays, view containers"
+    exports[0]:
+    imports[15]: css/reset.css,css/variables.css,css/base.css,css/layout.css,css/components.css,css/packages.css,css/activities.css,css/albums.css,css/home.css,css/responsive.css,js/config.js,js/data.js,js/components.js,js/router.js,js/main.js
+    size_lines: 256
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[3]: html,shell,spa
+  "js/config.js":
+    purpose: SHEET_ENDPOINT URL for Google Apps Script form submissions
+    exports[1]: SHEET_ENDPOINT
+    imports[0]:
+    size_lines: 10
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[2]: config,forms
+  "js/data.js":
+    purpose: "All site content — destinations, packages, activities, reviews, FAQ, albums, nav, contact, country codes"
+    exports[13]: PLACES,DURATIONS,DURLABEL,PACKAGES,pkgsByPlace,ACTIVITIES,REVIEWS,FAQS,ALBUMS,NAV,HOME,CONTACT,COUNTRY_CODES
+    imports[0]:
+    size_lines: 226
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[3]: data,content,destinations
+  "js/components.js":
+    purpose: "Render helpers (UI object), interactive components, wishlist, header, forms, search, hero slideshow, reviews carousel, filter sheet, lead popup"
+    exports[5]: UI,__h,__esc,Wish,imgErr
+    imports[2]: js/data.js,js/config.js
+    size_lines: 576
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[5]: ui,components,wishlist,forms,header
+  "js/router.js":
+    purpose: "Hash-based SPA router — parses hash, renders views, sets nav active state, handles data-link clicks"
+    exports[2]: __renderRoute,__startRouter
+    imports[2]: js/components.js,js/main.js
+    size_lines: 83
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[3]: router,spa,navigation
+  "js/main.js":
+    purpose: "View renderers (home, packages, package detail, contact, activities, albums) + boot sequence"
+    exports[1]: ROUTES
+    imports[3]: js/data.js,js/components.js,js/router.js
+    size_lines: 532
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[3]: views,rendering,app-boot
+  "css/reset.css":
+    purpose: "CSS reset — normalize box-sizing, margins, typography across browsers"
+    exports[0]:
+    imports[0]:
+    size_lines: 50
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[2]: css,reset
+  "css/variables.css":
+    purpose: "CSS custom properties — colors, fonts, spacing, breakpoints, transitions"
+    exports[0]:
+    imports[0]:
+    size_lines: 80
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[3]: css,variables,theme
+  "css/base.css":
+    purpose: "Base typography, link styles, focus outlines, scrollbar styling"
+    exports[0]:
+    imports[0]:
+    size_lines: 70
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[3]: css,base,typography
+  "css/layout.css":
+    purpose: "Layout — header, footer, grid, container, sections, hero, banner, contact wrap"
+    exports[0]:
+    imports[0]:
+    size_lines: 200
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[4]: css,layout,header,footer
+  "css/components.css":
+    purpose: "Reusable components — cards, carousels, tabs, accordions, pills, reviews, blog cards, wishlist, mobile nav, overlays, lead modal"
+    exports[0]:
+    imports[0]:
+    size_lines: 400
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[5]: css,components,cards,carousel,modal
+  "css/packages.css":
+    purpose: "Package list + detail page styles — filter chips, pkg cards, itinerary, booking sidebar"
+    exports[0]:
+    imports[0]:
+    size_lines: 200
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[3]: css,packages,itinerary
+  "css/activities.css":
+    purpose: "Activities page — activity cards grid, filters, hero variation"
+    exports[0]:
+    imports[0]:
+    size_lines: 100
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[2]: css,activities
+  "css/albums.css":
+    purpose: "Photo albums — masonry grid, tall/wide/sq photos with captions"
+    exports[0]:
+    imports[0]:
+    size_lines: 100
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[3]: css,albums,gallery
+  "css/home.css":
+    purpose: "Homepage-specific — destination stack, 3D pillars, carousel overrides"
+    exports[0]:
+    imports[0]:
+    size_lines: 100
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[2]: css,homepage
+  "css/responsive.css":
+    purpose: "Responsive breakpoints — tablet, mobile adjustments for all pages"
+    exports[0]:
+    imports[0]:
+    size_lines: 150
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[3]: css,responsive,mobile
+  "apps-script/Code.gs":
+    purpose: "Google Apps Script — doPost handler for form submissions, writes to Sheet1/Sheet2"
+    exports[2]: doPost,doGet
+    imports[0]:
+    size_lines: 80
+    last_touched: "2026-06-01T00:00:00Z"
+    tags[3]: apps-script,google-sheets,form-backend
+updates[2]:
+  - id: upd_002
+    ts: "2026-06-01T00:00:00Z"
+    type: docs
+    file: project_local_knowledge_base/kb.toon.json
+    func: null
+    lines_changed[0]:
+    summary: add consolidated kb.toon.json + TOON.md instruction file
+    before: null
+    after: single-file KB summary and TOON format guide
+    triggered_by: "request: 'use the toon command to create toon file'"
+  - id: upd_001
+    ts: "2026-06-01T00:00:00Z"
+    type: docs
+    file: project_local_knowledge_base/kb_map.toon.json
+    func: null
+    lines_changed[0]:
+    summary: initial KB creation — pickle init scan
+    before: null
+    after: full project mapping with 17 source files
+    triggered_by: pickle init
