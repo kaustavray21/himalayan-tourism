@@ -21,31 +21,31 @@
     route: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h6a4 4 0 0 0 4-4V9M16 5h-6a4 4 0 0 0-4 4v6"/></svg>'
   };
 
+  /* ---------- wishlist controls (localStorage-backed via Wish/syncFavs) ---------- */
+  const HEART = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-4.35-9.5-8.5C.5 9 2 5.5 5.5 5.5 8 5.5 9.5 7.5 12 10c2.5-2.5 4-4.5 6.5-4.5C22 5.5 23.5 9 21.5 12.5 19 16.65 12 21 12 21Z"/></svg>';
+  const wishData = (p) => `data-fav="${esc(p.id)}" data-title="${esc(p.placeName ? p.placeName + " · " + p.days + " Days" : p.name)}" data-img="${p.img}" data-route="#/package/${p.id}"`;
+  function favHeart(p) {
+    return `<button class="card__fav" ${wishData(p)} aria-label="Save ${esc(p.placeName || p.name)} to wishlist" aria-pressed="false">${HEART}</button>`;
+  }
+  function wishButton(p) {
+    return `<button class="btn btn--outline btn--wish" ${wishData(p)} aria-pressed="false">${HEART}<span>Save to wishlist</span></button>`;
+  }
+
   /* ---------- card builders ---------- */
   function pkgCard(p) {
     return `
       <article class="card">
         <a class="card__media" href="#/package/${p.id}" data-link aria-label="${esc(p.name)}">
-          <img loading="lazy" decoding="async" onerror="imgErr(this)" src="${p.img}" alt="${esc(p.name)}">
+          <img loading="lazy" decoding="async" src="${p.img}" alt="${esc(p.name)}">
           <span class="card__badge card__badge--top">${p.days} Days</span>
         </a>
+        ${favHeart(p)}
         <a class="card__body" href="#/package/${p.id}" data-link>
           <span class="card__kicker">${esc(p.placeName)} · ${esc(p.state)}</span>
           <span class="card__title">${esc(p.name)}</span>
           <span class="card__desc">${esc(p.summary)}</span>
         </a>
       </article>`;
-  }
-  /* Compact destination card for the home "Where would you like to go?" row */
-  function destCard(p) {
-    return `
-      <a class="dest-card" href="#/packages/${p.id}" data-link aria-label="${esc(p.name)}">
-        <div class="dest-card__media"><img loading="lazy" decoding="async" onerror="imgErr(this)" src="${p.img}" alt="${esc(p.name)}"></div>
-        <div class="dest-card__body">
-          <h3>${esc(p.name)}</h3>
-          <span>${esc(p.state)} · 3 trips</span>
-        </div>
-      </a>`;
   }
   /* Floating glass "Filters" icon + panel (shared by packages & activities) */
   function filterFabSheet(groupsHTML) {
@@ -71,11 +71,17 @@
     </div>`;
   }
   function pillars() {
-    const item = (ico, h, t) => `<div class="pillar"><div class="ico">${ICN[ico]}</div><h3>${h}</h3><p>${t}</p></div>`;
+    const item = (ico, h, t) => `
+      <div class="card3d">
+        <div class="card3d__ico">${ICN[ico]}</div>
+        <h3 class="card3d__title">${h}</h3>
+        <p>${t}</p>
+      </div>`;
     return `
-      <section class="section">
+      <section class="section pillars-sec" style="background-image:url('${HM.alt3}')">
+        <div class="pillars-sec__scrim"></div>
         ${UI.sectionHead("Why us", "Travel with local experts")}
-        <div class="container"><div class="pillars">
+        <div class="container"><div class="cards-3d">
           ${item("shield", "Handpicked & safe", "Vetted stays, licensed guides and 24×7 on-trip support.")}
           ${item("users", "Small groups", "Intimate departures and easy tailor-made private trips.")}
           ${item("route", "Everything planned", "Stays, transfers, permits and meals — sorted end to end.")}
@@ -87,7 +93,7 @@
       <section class="section section--alt">
         <div class="container">
           <div class="banner">
-            <div class="banner__media"><img loading="lazy" onerror="imgErr(this)" src="${CONTACT.img}" alt="${esc(CONTACT.owner)}"></div>
+            <div class="banner__media"><img loading="lazy" src="${CONTACT.img}" alt="${esc(CONTACT.owner)}"></div>
             <div class="banner__body">
               <span class="eyebrow">Talk to a local expert</span>
               <h2>Plan your trip with ${esc(CONTACT.owner)}</h2>
@@ -112,7 +118,25 @@
 
       <section class="section section--alt">
         ${UI.sectionHead("Destinations", "Where would you like to go?", "Two Himalayan favourites — each with 3 trips of different lengths.")}
-        <div class="container"><div class="dest-grid">${PLACES.map(destCard).join("")}</div></div>
+        <div class="container">
+          <div class="dest-feature">
+            <div class="dest-stack" data-dest-stack aria-hidden="true">
+              ${[PLACES[0].img, PLACES[1].img, ACTIVITIES[2].img, ACTIVITIES[8].img, ACTIVITIES[4].img]
+                .map(src => `<div class="dest-photo"><img loading="lazy" decoding="async" src="${src}" alt=""></div>`).join("")}
+            </div>
+            <div class="dest-list">
+              ${PLACES.map(p => `
+                <a class="dest-link" href="#/packages/${p.id}" data-link>
+                  <span class="dest-link__name">${esc(p.name)}</span>
+                  <span class="dest-link__meta">${esc(p.state)} · 3 trips</span>
+                </a>`).join("")}
+              <a class="dest-link dest-link--all" href="#/packages" data-link>
+                <span class="dest-link__name">All packages</span>
+                <span class="dest-link__meta">Browse every trip →</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </section>
 
       ${reviewsBlock()}
@@ -136,10 +160,13 @@
 
     const rows = PACKAGES.map(p => `
       <article class="pkg-card" data-place="${p.placeId}" data-dur="${p.durKey}">
-        <a class="pkg-card__media" href="#/package/${p.id}" data-link aria-label="${esc(p.name)}">
-          <img loading="lazy" onerror="imgErr(this)" src="${p.img}" alt="${esc(p.name)}">
-          <span class="pkg-card__region">${p.days} Days</span>
-        </a>
+        <div class="pkg-card__media">
+          <a href="#/package/${p.id}" data-link aria-label="${esc(p.name)}">
+            <img loading="lazy" decoding="async" src="${p.img}" alt="${esc(p.name)}">
+            <span class="pkg-card__region">${p.days} Days</span>
+          </a>
+          ${favHeart(p)}
+        </div>
         <div class="pkg-card__body">
           <h3>${esc(p.placeName)} · ${p.days} Days</h3>
           <div class="pkg-card__facts"><span><b>${p.state}</b></span><span>Difficulty: <b>${esc(p.difficulty)}</b></span><span>Best: <b>${esc(p.bestTime)}</b></span></div>
@@ -147,7 +174,7 @@
           <div class="pkg-card__tags">${p.highlights.slice(0, 3).map(t => `<span class="pkg-tag">${esc(t)}</span>`).join("")}</div>
         </div>
         <div class="pkg-card__aside">
-          <a class="btn btn--primary" href="#/package/${p.id}" data-link>View itinerary</a>
+          <a class="btn btn--primary" href="#/package/${p.id}" data-link>View</a>
           <a class="btn btn--outline" href="#/contact" data-link>Enquire</a>
         </div>
       </article>`).join("");
@@ -209,7 +236,7 @@
 
     view.innerHTML = `
       <section class="pkg-detail__hero">
-        <img src="${p.img}" alt="${esc(p.name)}" fetchpriority="high" onerror="imgErr(this)">
+        <img src="${p.img}" alt="${esc(p.name)}" fetchpriority="high">
         <div class="container pkg-detail__heroinner">
           <a class="crumb" href="#/packages" data-link>← All packages</a>
           <h1>${esc(p.placeName)} · ${p.days} Days</h1>
@@ -235,6 +262,7 @@
             <div class="pkg-book">
               <p class="pkg-book__lead">Get a tailored quote for your dates, group size and hotel category.</p>
               <a class="btn btn--primary" href="#/contact" data-link>Enquire / Book</a>
+              ${wishButton(p)}
               <a class="btn btn--outline" href="#/packages/${p.placeId}" data-link>Other ${esc(p.placeName)} trips</a>
             </div>
             <div class="pkg-incl">
@@ -272,7 +300,7 @@
 
       <div class="container"><div class="contact-wrap">
         <div class="contact-card">
-          <img src="${c.img}" alt="${esc(c.owner)}" onerror="imgErr(this)">
+          <img src="${c.img}" alt="${esc(c.owner)}">
           <div class="contact-card__body">
             <h3>${esc(c.owner)}</h3>
             <div class="contact-card__role">${esc(c.role)}</div>
@@ -297,7 +325,14 @@
               <div><label for="cEmail">Email</label><input id="cEmail" name="email" type="email" required placeholder="you@example.com"></div>
             </div>
             <div class="row2">
-              <div><label for="cPhone">Phone</label><input id="cPhone" name="phone" type="tel" placeholder="+91 ..."></div>
+              <div><label for="cPhone">Phone</label>
+                <div class="phone-group">
+                  <select name="countryCode" class="cc-select" aria-label="Country dialing code">
+                    ${COUNTRY_CODES.map(([code, iso]) => `<option value="${code}"${code === "+91" ? " selected" : ""}>${esc(iso)} ${code}</option>`).join("")}
+                  </select>
+                  <input id="cPhone" name="phone" type="tel" placeholder="98xxx xxxxx" autocomplete="tel-national">
+                </div>
+              </div>
               <div><label for="cPkg">Trip of interest</label>
                 <select id="cPkg" name="package"><option value="">Not sure yet</option>${PACKAGES.map(p => `<option>${esc(p.name)}</option>`).join("")}</select>
               </div>
@@ -318,6 +353,8 @@
       if (!name.value.trim() || !email.checkValidity()) { msg.textContent = "Please add your name and a valid email."; msg.classList.add("is-error"); return; }
       msg.classList.remove("is-error");
       const data = Object.fromEntries(new FormData(form).entries());
+      if (data.phone) data.phone = ((data.countryCode || "") + " " + data.phone).trim();
+      delete data.countryCode;
       const btn = form.querySelector("button[type=submit]");
       btn.disabled = true; msg.textContent = "Sending…";
       UI.submitToSheet("contact", data)
@@ -367,7 +404,7 @@
   function actCard(a) {
     return `
       <a class="act-card" href="#/packages/${a.placeId}" data-link data-place="${a.placeId}" aria-label="${esc(a.name)} — ${esc(a.place)}">
-        <div class="act-card__media"><img loading="lazy" onerror="imgErr(this)" src="${a.img}" alt="${esc(a.name)}"></div>
+        <div class="act-card__media"><img loading="lazy" src="${a.img}" alt="${esc(a.name)}"></div>
         <div class="act-card__body">
           <span class="act-card__place">${esc(a.place)}, ${esc(a.state)}</span>
           <span class="act-card__name">${esc(a.name)}</span>
@@ -377,7 +414,7 @@
   function blogSection() {
     const cards = FAQS.map(f => `
       <article class="blog-card">
-        <a class="blog-card__media" href="#/contact" data-link aria-label="${esc(f.q)}"><img loading="lazy" onerror="imgErr(this)" src="${f.img}" alt=""></a>
+        <a class="blog-card__media" href="#/contact" data-link aria-label="${esc(f.q)}"><img loading="lazy" src="${f.img}" alt=""></a>
         <div class="blog-card__body">
           <span class="blog-card__tag">${esc(f.tag)}</span>
           <h3>${esc(f.q)}</h3>
@@ -455,7 +492,7 @@
           <div class="album-masonry">
             ${al.photos.map(ph => `
               <figure class="photo photo--${ph.shape}">
-                <img loading="lazy" decoding="async" onerror="imgErr(this)" src="${ph.img}" alt="${esc(ph.loc)}">
+                <img loading="lazy" decoding="async" src="${ph.img}" alt="${esc(ph.loc)}">
                 <figcaption>
                   <span class="photo__loc">${esc(ph.loc)}</span>
                   <span class="photo__date">${esc(ph.date)}</span>

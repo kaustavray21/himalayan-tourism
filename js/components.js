@@ -8,12 +8,25 @@
   /* ---------- tiny DOM helpers ---------- */
   const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
   const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+  /* Only allow in-app hash routes (defends against tampered localStorage injecting javascript: links). */
+  const safeRoute = (r) => (typeof r === "string" && /^#\/[\w\-/]*$/.test(r)) ? r : "#/home";
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
-  /* Image fallback (broken Unsplash url → teal gradient block) */
-  window.imgErr = function (img) { img.onerror = null; img.classList.add("img-fallback"); img.removeAttribute("src"); };
-  const imgAttr = `loading="lazy" decoding="async" onerror="imgErr(this)"`;
+  /* Image fallback (broken url → teal gradient block).
+     No inline onerror handlers are used (keeps a strict CSP) — instead a single
+     capture-phase listener catches every <img> load failure document-wide. */
+  window.imgErr = function (img) {
+    if (!img || img.dataset.fb) return;
+    img.dataset.fb = "1";
+    img.classList.add("img-fallback");
+    img.removeAttribute("src");
+  };
+  window.addEventListener("error", function (e) {
+    var t = e.target;
+    if (t && t.tagName === "IMG") window.imgErr(t);
+  }, true);
+  const imgAttr = `loading="lazy" decoding="async"`;
 
   /* ============================================================
      RENDER HELPERS
@@ -117,7 +130,7 @@
       </div>` : "";
     const slides = (hero.slides && hero.slides.length) ? hero.slides : [hero.img];
     const media = slides.map((s, i) =>
-      `<img class="hero__slide${i === 0 ? " is-active" : ""}" src="${s}" alt="${esc(hero.title)}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" onerror="imgErr(this)" />`).join("");
+      `<img class="hero__slide${i === 0 ? " is-active" : ""}" src="${s}" alt="${esc(hero.title)}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" />`).join("");
     return `
       <section class="hero${page ? " hero--page" : ""}"${slides.length > 1 ? " data-hero-slides" : ""}>
         <div class="hero__media">${media}</div>
@@ -231,12 +244,17 @@
   };
   window.Wish = Wish;
 
+  /* Paint a wishlist control (heart icon or text button) to match saved state. */
+  function paintFav(b, on) {
+    b.classList.toggle("is-active", on);
+    b.setAttribute("aria-pressed", String(on));
+    if (b.classList.contains("btn--wish")) {
+      const s = b.querySelector("span");
+      if (s) s.textContent = on ? "Saved to wishlist" : "Save to wishlist";
+    }
+  }
   UI.syncFavs = function (root = document) {
-    $$(".card__fav", root).forEach(b => {
-      const on = Wish.has(b.dataset.fav);
-      b.classList.toggle("is-active", on);
-      b.setAttribute("aria-pressed", String(on));
-    });
+    $$("[data-fav]", root).forEach(b => paintFav(b, Wish.has(b.dataset.fav)));
     const count = Wish.items().length;
     const badge = document.getElementById("wishCount");
     if (badge) { badge.textContent = count; badge.dataset.empty = count === 0; }
@@ -245,25 +263,24 @@
   UI.renderWishlist = function () {
     const list = document.getElementById("wishlistList");
     const items = Wish.items();
-    if (!items.length) { list.innerHTML = `<p class="wishlist-empty">No saved places yet.<br>Tap the ♥ on any card to save it here.</p>`; return; }
+    if (!items.length) { list.innerHTML = `<p class="wishlist-empty">No saved trips yet.<br>Tap the ♥ on any trip to save it here.</p>`; return; }
     list.innerHTML = items.map(i => `
       <div class="wishlist-row">
-        <img src="${i.img}" alt="${esc(i.title)}" loading="lazy" onerror="imgErr(this)" />
-        <a href="${i.route}" data-link><strong>${esc(i.title)}</strong></a>
+        <img src="${i.img}" alt="${esc(i.title)}" loading="lazy" />
+        <a href="${safeRoute(i.route)}" data-link><strong>${esc(i.title)}</strong></a>
         <button class="icon-btn rm" data-rm="${esc(i.id)}" aria-label="Remove ${esc(i.title)}">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
         </button>
       </div>`).join("");
   };
 
-  /* Delegated fav + remove clicks */
+  /* Delegated fav + remove clicks (works for heart icons and text buttons) */
   document.addEventListener("click", e => {
-    const fav = e.target.closest(".card__fav");
+    const fav = e.target.closest("[data-fav]");
     if (fav) {
       e.preventDefault();
       const added = Wish.toggle({ id: fav.dataset.fav, title: fav.dataset.title, img: fav.dataset.img, route: fav.dataset.route });
-      fav.classList.toggle("is-active", added);
-      fav.setAttribute("aria-pressed", String(added));
+      paintFav(fav, added);
       UI.syncFavs(); UI.renderWishlist();
       return;
     }
@@ -393,7 +410,7 @@
     if (!q) { box.innerHTML = ""; return; }
     const hits = (window.SEARCH_INDEX || []).filter(i => i.title.toLowerCase().includes(q)).slice(0, 8);
     box.innerHTML = hits.length
-      ? hits.map(i => `<a href="${i.route}" data-link><img src="${i.img}" alt="" onerror="imgErr(this)"><span><strong>${esc(i.title)}</strong>${i.meta ? ` · <small>${esc(i.meta)}</small>` : ""}</span></a>`).join("")
+      ? hits.map(i => `<a href="${i.route}" data-link><img src="${i.img}" alt=""><span><strong>${esc(i.title)}</strong>${i.meta ? ` · <small>${esc(i.meta)}</small>` : ""}</span></a>`).join("")
       : `<p class="wishlist-empty">No matches for “${esc(q)}”.</p>`;
   };
 
@@ -479,10 +496,31 @@
   };
 
   /* Run all component initialisers within a freshly-rendered view */
+  /* Tilted "pile of photos" — auto-rotates the front photo to the back. */
+  let destTimer = null;
+  UI.initDestStack = function (root) {
+    if (destTimer) { clearInterval(destTimer); destTimer = null; }
+    const stack = root.querySelector("[data-dest-stack]");
+    if (!stack) return;
+    const photos = $$(".dest-photo", stack);
+    if (photos.length < 2) return;
+    const rots = [0, -6, 5, -3, 7];
+    let order = photos.map((_, i) => i);
+    const apply = () => order.forEach((idx, pos) => {
+      const el = photos[idx];
+      el.style.zIndex = String(photos.length - pos);
+      el.style.transform = `translate(${pos * 16}px, ${pos * 12}px) rotate(${rots[pos % rots.length]}deg) scale(${1 - pos * 0.05})`;
+      el.style.opacity = pos > 3 ? "0" : "1";
+    });
+    apply();
+    destTimer = setInterval(() => { order.push(order.shift()); apply(); }, 2800);
+  };
+
   UI.hydrate = function (root) {
     UI.initHero(root);
     UI.initReviews(root);
     UI.initFilterSheet(root);
+    UI.initDestStack(root);
     UI.initCarousels(root);
     UI.initTabsets(root);
     UI.initAccordions(root);

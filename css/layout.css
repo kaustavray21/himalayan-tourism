@@ -12,17 +12,26 @@
               background var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
               border-radius var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-/* Floating "glass" header once the page is scrolled */
+/* Floating "glass" header — a COMPACT, CENTERED pill once the page is scrolled.
+   The pill shrinks to its content (no empty stretch) and centers itself,
+   which also keeps the menu/wishlist icons inside the bar at every width. */
 .site-header.is-floating {
   top: 12px;
-  margin-inline: clamp(12px, 4vw, 40px);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.site-header.is-floating .header-inner {
+  width: max-content; max-width: calc(100% - 16px); margin-inline: auto;
+  height: auto; padding: 8px 18px; gap: var(--s-4);
   border-radius: var(--radius-pill);
-  border-color: rgba(255, 255, 255, .55);
-  background: rgba(255, 255, 255, .62);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  backdrop-filter: blur(16px) saturate(160%);
+  background: rgba(255, 255, 255, .66);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  backdrop-filter: blur(16px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, .6);
   box-shadow: var(--shadow-lg);
 }
+.site-header.is-floating .header-utils { margin-left: 0; }   /* group content, don't spread it */
 /* In the floating glass bar, drop the solid hover pill — only recolor the text */
 .site-header.is-floating .nav-item:hover .nav-link,
 .site-header.is-floating .nav-item.is-open .nav-link,
@@ -36,7 +45,7 @@
   display: flex; align-items: center; gap: var(--s-5);
 }
 .brand {
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
   font-family: "Marcellus", "Cormorant Garamond", Georgia, serif;
   font-weight: 400; font-size: 1.6rem; letter-spacing: .04em;
   color: var(--color-text);
@@ -105,7 +114,10 @@
   top: calc(var(--header-h) + 6px);
   left: 50%; transform: translateX(-50%) translateY(8px);
   width: min(980px, 94vw);
-  background: #fff; border: 1px solid var(--color-line);
+  background: rgba(255, 255, 255, .72);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, .55);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
   padding: var(--s-6);
   opacity: 0; visibility: hidden; pointer-events: none;

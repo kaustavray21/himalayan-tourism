@@ -1,0 +1,93 @@
+/* ============================================================
+   home.css — destinations "photo pile + glowing text" + 3D glass cards
+   ============================================================ */
+
+/* ---------- Destinations feature ---------- */
+.dest-feature {
+  display: grid; grid-template-columns: 1.05fr .95fr; gap: var(--s-8); align-items: center;
+}
+
+/* Tilted pile of photos (auto-rotating) */
+.dest-stack { position: relative; aspect-ratio: 4 / 3; }
+.dest-photo {
+  position: absolute; inset: 0; border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  transition: transform .7s var(--ease), opacity .7s var(--ease);
+  transform-origin: 60% 80%;
+}
+.dest-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Big text links that glow on hover */
+.dest-list { display: flex; flex-direction: column; }
+.dest-link {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: var(--s-4) 0; border-bottom: 1px solid var(--color-line);
+  transition: transform .3s var(--ease);
+}
+.dest-link:last-child { border-bottom: 0; }
+.dest-link__name {
+  font-family: "Marcellus", "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.9rem, 4.4vw, 3rem); line-height: 1.05; color: var(--color-text);
+  transition: color .3s var(--ease), text-shadow .3s var(--ease);
+}
+.dest-link__meta { color: var(--color-muted); font-size: var(--fs-sm); }
+.dest-link:hover { transform: translateX(8px); }
+.dest-link:hover .dest-link__name {
+  color: var(--color-accent);
+  text-shadow: 0 0 22px rgba(0, 169, 206, .55);
+}
+.dest-link--all .dest-link__name { color: var(--color-accent); }
+
+/* ---------- "Why us" — animated 3D glass cards over a photo ---------- */
+.pillars-sec { position: relative; background-size: cover; background-position: center; color: #fff; }
+.pillars-sec__scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(11, 20, 28, .80), rgba(11, 20, 28, .88));
+}
+.pillars-sec > * { position: relative; z-index: 1; }
+.pillars-sec .section-head h2 { color: #fff; }
+
+.cards-3d { perspective: 1000px; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-6); }
+.card3d {
+  position: relative; min-height: 240px; padding: 28px; border-radius: 18px;
+  background: rgba(255, 255, 255, .12);
+  -webkit-backdrop-filter: blur(12px) saturate(140%); backdrop-filter: blur(12px) saturate(140%);
+  border: 1.5px solid rgba(255, 255, 255, .35);
+  transform-style: preserve-3d; will-change: transform;
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .5s var(--ease);
+}
+.card3d:hover {
+  transform: translateZ(10px) rotateX(8deg) rotateY(-8deg);
+  box-shadow: 0 34px 60px -22px rgba(0, 0, 0, .55);
+  border-color: var(--color-accent);
+}
+.card3d__ico {
+  width: 56px; height: 56px; border-radius: 15px;
+  background: rgba(0, 169, 206, .28); border: 1px solid rgba(255, 255, 255, .25);
+  display: flex; align-items: center; justify-content: center; color: #fff;
+  transition: transform .5s var(--ease);
+}
+.card3d__ico svg { width: 28px; height: 28px; }
+.card3d__title { color: #fff; margin-top: var(--s-4); transition: transform .5s var(--ease); }
+.card3d p { color: rgba(255, 255, 255, .85); margin-top: var(--s-2); transition: transform .5s var(--ease); }
+.card3d:hover .card3d__ico { transform: translateZ(50px); }
+.card3d:hover .card3d__title { transform: translateZ(34px); }
+.card3d:hover p { transform: translateZ(20px); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .dest-feature { grid-template-columns: 1fr; gap: var(--s-6); }
+  .dest-stack { max-width: 520px; margin-inline: auto; width: 100%; }
+  .cards-3d { grid-template-columns: 1fr 1fr; gap: var(--s-5); }
+}
+@media (max-width: 640px) {
+  .cards-3d { grid-template-columns: 1fr; }
+  .dest-stack { aspect-ratio: 5 / 4; }
+}
+/* No 3D tilt on touch devices (no hover) */
+@media (hover: none) {
+  .card3d:hover { transform: none; box-shadow: none; }
+  .card3d:hover .card3d__ico,
+  .card3d:hover .card3d__title,
+  .card3d:hover p { transform: none; }
+}
